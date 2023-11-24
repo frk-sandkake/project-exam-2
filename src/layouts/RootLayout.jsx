@@ -3,6 +3,7 @@ import { Link, Outlet } from "react-router-dom"
 import { Dialog } from "@headlessui/react"
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline"
 import { useState } from "react"
+import { NavLink } from "../components/NavLink"
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ")
@@ -15,7 +16,7 @@ export function RootLayout() {
     <>
       <header className='bg-orange-800'>
         <nav
-          className='mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8'
+          className='mx-auto flex max-w-7xl items-center justify-between px-6 py-2 lg:px-8'
           aria-label='Global'
         >
           <div className='flex sm:flex-1'>
@@ -40,28 +41,19 @@ export function RootLayout() {
           </div>
           <ul className='hidden sm:flex sm:gap-x-8 md:gap-x-12'>
             <li>
-              <Link
-                to='home'
-                className='-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-orange-100 hover:bg-orange-500'
-              >
+              <NavLink size='md' color='dark' to='home'>
                 Home
-              </Link>
+              </NavLink>
             </li>
             <li>
-              <Link
-                to='venues'
-                className='-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-orange-100 hover:bg-orange-500'
-              >
+              <NavLink size='md' color='dark' to='venues'>
                 Venues
-              </Link>
+              </NavLink>
             </li>
             <li>
-              <Link
-                to='about'
-                className='-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-orange-100 hover:bg-orange-500'
-              >
+              <NavLink size='md' color='dark' to='about'>
                 About
-              </Link>
+              </NavLink>
             </li>
           </ul>
           <div className='hidden sm:flex sm:flex-1 sm:justify-end'>
@@ -75,7 +67,7 @@ export function RootLayout() {
               to='signup'
               className='px-3 py-2 text-sm font-semibold leading-6 text-orange-100  hover:bg-orange-500'
             >
-              Sign up <span aria-hidden='true'>&rarr;</span>
+              Sign in <span aria-hidden='true'>&rarr;</span>
             </Link>
           </div>
         </nav>
@@ -86,7 +78,7 @@ export function RootLayout() {
           onClose={setMobileMenuOpen}
         >
           <div className='fixed inset-0 z-10' />
-          <Dialog.Panel className='fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-orange-800 px-6 py-4'>
+          <Dialog.Panel className='fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-orange-800 px-6 py-2'>
             <div className='flex items-center justify-between'>
               <Link to='home' className='-m-1.5 p-1.5 py-2 ring-0'>
                 <span className='sr-only'>Holidaze</span>
@@ -114,31 +106,34 @@ export function RootLayout() {
                 <div role='none' aria-label='divider'>
                   <ul className='space-y-2 py-6'>
                     <li>
-                      <Link
-                        to='/home'
-                        className='-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-orange-100 hover:bg-orange-500'
+                      <NavLink
+                        size='md'
+                        color='dark'
+                        to='home'
                         onClick={() => setMobileMenuOpen(false)}
                       >
                         Home
-                      </Link>
+                      </NavLink>
                     </li>
                     <li>
-                      <Link
-                        to='/venues'
-                        className='-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-orange-100 hover:bg-orange-500'
+                      <NavLink
+                        size='md'
+                        color='dark'
+                        to='venues'
                         onClick={() => setMobileMenuOpen(false)}
                       >
                         Venues
-                      </Link>
+                      </NavLink>
                     </li>
                     <li>
-                      <Link
-                        to='/about'
-                        className='-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-orange-100 hover:bg-orange-500'
+                      <NavLink
+                        size='md'
+                        color='dark'
+                        to='about'
                         onClick={() => setMobileMenuOpen(false)}
                       >
                         About
-                      </Link>
+                      </NavLink>
                     </li>
                   </ul>
                 </div>
