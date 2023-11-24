@@ -66,10 +66,16 @@ export function RootLayout() {
           </ul>
           <div className='hidden sm:flex sm:flex-1 sm:justify-end'>
             <Link
-              to='#'
+              to='login'
               className='px-3 py-2 text-sm font-semibold leading-6 text-orange-100  hover:bg-orange-500'
             >
               Log in <span aria-hidden='true'>&rarr;</span>
+            </Link>
+            <Link
+              to='signup'
+              className='px-3 py-2 text-sm font-semibold leading-6 text-orange-100  hover:bg-orange-500'
+            >
+              Sign up <span aria-hidden='true'>&rarr;</span>
             </Link>
           </div>
         </nav>
