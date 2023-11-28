@@ -1,13 +1,13 @@
 /** @format */
-import { Navigate, createBrowserRouter, useRouteError } from "react-router-dom"
+import { Navigate, useRouteError } from "react-router-dom"
 
-import { RootLayout } from "./layouts/RootLayout"
-import Home from "./Pages/Home"
-import Venues from "./Pages/Venues"
-import About from "./Pages/About"
-import { NotFoundPage } from "./pages/NotFoundPage"
-import { AuthLayout, LoginForm, SignupForm } from "./features/authentication"
-import { MyVenues } from "./pages/venues/my-venues/MyVenues"
+import { RootLayout } from "@/layouts/RootLayout"
+import { Home } from "@/pages/Home"
+import { Venues } from "@/pages/Venues"
+import { About } from "@/pages/About"
+import { NotFoundPage } from "@/pages/NotFoundPage"
+import { AuthLayout, LoginForm, SignupForm } from "@/features/authentication"
+import { myVenuesRoute } from "./pages/venues/my-venues"
 
 export const routes = [
   {
@@ -28,8 +28,13 @@ export const routes = [
         element: <Venues />,
       },
       {
-        path: "listings",
-        element: <MyVenues />,
+        path: "profile",
+        children: [
+          {
+            index: true,
+            ...myVenuesRoute,
+          },
+        ],
       },
       {
         path: "about",
