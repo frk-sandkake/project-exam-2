@@ -14,9 +14,8 @@ export function LoginForm() {
     formState: { errors, isSubmitting },
   } = useForm()
 
-  async function onSubmit(value) {
-    await login(value).catch((error) => {
-      console.log(error)
+  async function onSubmit(email, password) {
+    await login(email, password).catch((error) => {
       if (error.response && error.response.data && error.response.data.errors) {
         const errorMessage = error.response.data.errors[0].message
         alert(errorMessage)

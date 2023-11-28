@@ -19,7 +19,6 @@ export function SignupForm() {
 
   async function onSubmit(values) {
     await signup(values).catch((error) => {
-      console.log(error)
       if (
         error instanceof AxiosError &&
         error.response &&
