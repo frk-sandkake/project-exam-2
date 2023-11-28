@@ -1,41 +1,59 @@
 /** @format */
 
-import { Fragment, createContext, useState } from "react"
+import { createContext, useEffect, useState } from "react"
 import {
   fetchSignup as signupService,
   fetchLogin as loginService,
 } from "../services/apiAuth"
 import { useLocation, useNavigate } from "react-router-dom"
-import { Dialog, Transition } from "@headlessui/react"
-import { Button } from "../../../components/Button"
+import { LogoutDialog } from "@/features/authentication"
+import { useLocalStorage } from "@/hooks/useLocalStorage"
 
 export const Context = createContext(null)
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState()
-  let [isOpen, setIsOpen] = useState(true)
-
+  const [user, setUser] = useLocalStorage("user", "")
   const [isLoadingUser, setIsLoadingUser] = useState(true)
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false)
+
   const navigate = useNavigate()
   const location = useLocation()
 
-  function closeModal() {
-    setIsOpen(false)
+  useEffect(() => {
+    setIsLoadingUser(true)
+    if (!isLoadingUser) {
+      setUser(user, "")
+      setIsLoadingUser(false)
+    }
+  }, [])
+
+  async function signup(name, email, password, venueManager) {
+    const user = await signupService(name, email, password, venueManager)
+    setUser(user, "")
+    navigate(location.state?.location ?? "/")
   }
 
-  function signup(name, email, password, venueManager) {
-    return signupService(name, email, password, venueManager).then((user) => {
-      setUser(user)
-      navigate(location.state?.location ?? "/")
-    })
+  async function login(email, password) {
+    const user = await loginService(email, password)
+    setUser(user, "")
+    console.log(user)
+    navigate(location.state?.location ?? "/")
   }
 
-  function login(email, password) {
-    return loginService(email, password).then((user) => {
-      setUser(user)
-      navigate(location.state?.location ?? "/")
-    })
+  const logout = () => {
+    setIsLogoutModalOpen(true)
+    logoutUser()
   }
+
+  const logoutUser = () => {
+    setUser()
+    setEmail()
+    localStorage.clear()
+    setTimeout(() => {
+      setIsLogoutModalOpen(false)
+    }, 2000)
+  }
+
   return (
     <Context.Provider
       value={{
@@ -43,59 +61,16 @@ export function AuthProvider({ children }) {
         isLoadingUser,
         signup,
         login,
+        logout,
+        isLogoutModalOpen,
         isLoadingUser: user != null,
       }}
     >
       {children}
-      <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as='div' className='relative z-10' onClose={closeModal}>
-          <Transition.Child
-            as={Fragment}
-            enter='ease-out duration-300'
-            enterFrom='opacity-0'
-            enterTo='opacity-100'
-            leave='ease-in duration-200'
-            leaveFrom='opacity-100'
-            leaveTo='opacity-0'
-          >
-            <div className='fixed inset-0 bg-black/25' />
-          </Transition.Child>
-
-          <div className='fixed inset-0 overflow-y-auto'>
-            <div className='flex min-h-full items-center justify-center p-4 text-center'>
-              <Transition.Child
-                as={Fragment}
-                enter='ease-out duration-300'
-                enterFrom='opacity-0 scale-95'
-                enterTo='opacity-100 scale-100'
-                leave='ease-in duration-200'
-                leaveFrom='opacity-100 scale-100'
-                leaveTo='opacity-0 scale-95'
-              >
-                <Dialog.Panel className='w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all'>
-                  <Dialog.Title
-                    as='h3'
-                    className='text-lg font-medium leading-6 text-gray-900'
-                  >
-                    My title
-                  </Dialog.Title>
-                  <p className='text-sm text-gray-500'>Some text</p>
-                  <div className='mt-4'>
-                    <Button
-                      type='button'
-                      size='md'
-                      color='secondaryOutline'
-                      onClick={closeModal}
-                    >
-                      Close
-                    </Button>
-                  </div>
-                </Dialog.Panel>
-              </Transition.Child>
-            </div>
-          </div>
-        </Dialog>
-      </Transition>
+      <LogoutDialog
+        open={isLogoutModalOpen}
+        onClose={() => setIsLogoutModalOpen(false)}
+      ></LogoutDialog>
     </Context.Provider>
   )
 }
