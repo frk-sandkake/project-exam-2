@@ -1,23 +1,22 @@
 /** @format */
 
-import { Dialog } from "@headlessui/react"
+//import { Dialog } from "@headlessui/react"
+import { AlertDialog } from "@radix-ui/themes"
 
-export function LogoutDialog({ open, onClose }) {
+export function LogoutDialog({ open, onOpenChange }) {
   return (
-    <Dialog as='div' className='relative z-10' open={open} onClose={onClose}>
-      <div className='fixed inset-0 bg-black/25' />
-      <div className='fixed inset-0 overflow-y-auto'>
-        <div className='flex min-h-full items-center justify-center p-4 text-center'>
-          <Dialog.Panel className='w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all'>
-            <Dialog.Title
-              as='h3'
-              className='text-lg font-medium leading-6 text-gray-900'
-            >
-              Bye for now
-            </Dialog.Title>
-          </Dialog.Panel>
-        </div>
+    <>
+      <div>
+        <AlertDialog.Root open={open} onOpenChange={onOpenChange}>
+          <AlertDialog.Trigger>Open</AlertDialog.Trigger>
+          <AlertDialog.Content style={{ maxWidth: 450 }}>
+            <AlertDialog.Title>Revoke access</AlertDialog.Title>
+            <AlertDialog.Description size='2'>
+              Logging out..
+            </AlertDialog.Description>
+          </AlertDialog.Content>
+        </AlertDialog.Root>
       </div>
-    </Dialog>
+    </>
   )
 }
