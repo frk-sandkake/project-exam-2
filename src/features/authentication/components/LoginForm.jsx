@@ -1,8 +1,8 @@
 /** @format */
 import { Link } from "react-router-dom"
 import { useForm } from "react-hook-form"
-import { Button } from "@/components/Button"
-import { FormGroup } from "@/components/FormGroup"
+import { Button } from "../../../components/Button"
+import { FormGroup } from "../../../components/FormGroup"
 import { useAuth } from "../hooks/useAuth"
 
 export function LoginForm() {
