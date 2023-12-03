@@ -1,15 +1,24 @@
 /** @format */
-import { Navigate, useRouteError } from "react-router-dom"
+import { Navigate, createBrowserRouter, useRouteError } from "react-router-dom"
 
-import { RootLayout } from "@/layouts/RootLayout"
-import { Home } from "@/pages/Home"
-import { Venues } from "@/pages/Venues"
-import { About } from "@/pages/About"
-import { NotFoundPage } from "@/pages/NotFoundPage"
-import { AuthLayout, LoginForm, SignupForm } from "@/features/authentication"
+import { RootLayout } from "./layouts/RootLayout"
+import { AuthLayout } from "./layouts/AuthLayout"
+import { UserLayout } from "./layouts/UserLayout"
+
+import { Home } from "./pages/Home"
+import { About } from "./pages/About"
+import { NotFoundPage } from "./pages/NotFoundPage"
+import { LoginForm, SignupForm } from "./features/authentication"
 import { myVenuesRoute } from "./pages/venues/my-venues"
+import { userDashboardRoute } from "./pages/user/Dashboard"
+import { venuesListRoute } from "./pages/Venues"
+import {
+  AvatarForm,
+  // loader as editAvatarLoader,
+  // action as editavatarAction,
+} from "./features/user/components/AvatarForm"
 
-export const routes = [
+export const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
@@ -25,13 +34,39 @@ export const routes = [
       },
       {
         path: "venues",
-        element: <Venues />,
-      },
-      {
-        path: "profile",
         children: [
           {
             index: true,
+            ...venuesListRoute,
+          },
+        ],
+      },
+      {
+        path: "user",
+        element: <UserLayout />,
+        errorElement: <ErrorPage />,
+
+        children: [
+          {
+            path: ":userId",
+            ...userDashboardRoute,
+          },
+
+          {
+            path: "avatar",
+            element: <AvatarForm />,
+            errorElement: <ErrorPage />,
+            // loader: editAvatarLoader,
+            // action: editavatarAction,
+          },
+        ],
+      },
+      {
+        path: "venu",
+        children: [
+          {
+            index: true,
+            path: "venues",
             ...myVenuesRoute,
           },
         ],
@@ -50,19 +85,21 @@ export const routes = [
       { path: "*", element: <NotFoundPage /> },
     ],
   },
-]
+])
 
 function ErrorPage() {
   const error = useRouteError()
   return (
-    <>
+    <div className='mx-auto h-full'>
       <h1 className='text-slate-600 text-3xl font-bold underline'>Error</h1>
+
       {"production" && (
-        <>
-          <pre>{error.message}</pre>
-          <pre>{error.stack}</pre>
-        </>
+        <div className=''>
+          <p>Message: {error.message}</p>
+          <p className=''>Status: {error.statusText}</p>
+          <p className=''>Stack: {error.stack}</p>
+        </div>
       )}
-    </>
+    </div>
   )
 }
