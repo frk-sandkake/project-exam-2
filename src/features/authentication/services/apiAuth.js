@@ -1,6 +1,6 @@
 /** @format */
 
-import { baseApi } from "@/services/baseApi"
+import { baseApi } from "../../../services/baseApi"
 
 export async function fetchSignup(data, options) {
   const res = await baseApi.post("auth/register", data, options)

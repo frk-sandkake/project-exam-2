@@ -6,13 +6,14 @@ import {
   fetchLogin as loginService,
 } from "../services/apiAuth"
 import { useLocation, useNavigate } from "react-router-dom"
-import { LogoutDialog } from "@/features/authentication"
-import { useLocalStorage } from "@/hooks/useLocalStorage"
+import { LogoutDialog } from "../components/LogoutDialog"
+import { useLocalStorage } from "../../../hooks/useLocalStorage"
 
 export const Context = createContext(null)
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useLocalStorage("user", "")
+  let [user, setUser] = useLocalStorage("user", "")
+  const [accessToken, setAccessToken] = useState(false)
   const [isLoadingUser, setIsLoadingUser] = useState(true)
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false)
 
@@ -21,36 +22,53 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     setIsLoadingUser(true)
-    if (!isLoadingUser) {
-      setUser(user, "")
+    localStorage.getItem(accessToken)
+    if (accessToken) {
+      setAccessToken(true)
+      setUser(user)
       setIsLoadingUser(false)
     }
   }, [])
 
-  async function signup(name, email, password, venueManager) {
-    const user = await signupService(name, email, password, venueManager)
-    setUser(user, "")
-    navigate(location.state?.location ?? "/")
+  function signup(name, email, venueManager) {
+    return signupService(name, email, venueManager).then((user) => {
+      setUser(user, user)
+      const accessToken = user.accessToken
+      localStorage.setItem("accessToken", accessToken)
+      const userId = user.name
+      localStorage.setItem("userId", userId)
+      navigate(location.state?.location ?? "/")
+    })
   }
 
-  async function login(email, password) {
-    const user = await loginService(email, password)
-    setUser(user, "")
-    console.log(user)
-    navigate(location.state?.location ?? "/")
+  function login(email, password) {
+    return loginService(email, password).then((user) => {
+      setUser(user, user)
+      const accessToken = user.accessToken
+      localStorage.setItem("accessToken", accessToken)
+      const userId = user.name
+      localStorage.setItem("userId", userId)
+      navigate(location.state?.location ?? "/")
+    })
+  }
+
+  function getNameFromStorage() {
+    const user = localStorage.getItem(user)
+    if (user) {
+      return user.name
+    }
+    return null
   }
 
   const logout = () => {
     setIsLogoutModalOpen(true)
-    logoutUser()
-  }
-
-  const logoutUser = () => {
     setUser()
-    setEmail()
+    setAccessToken(false)
     localStorage.clear()
+
     setTimeout(() => {
       setIsLogoutModalOpen(false)
+      navigate(location.state?.location ?? "/")
     }, 2000)
   }
 
@@ -59,11 +77,12 @@ export function AuthProvider({ children }) {
       value={{
         user,
         isLoadingUser,
+        accessToken,
         signup,
         login,
         logout,
-        isLogoutModalOpen,
-        isLoadingUser: user != null,
+        getNameFromStorage,
+        isLoggedIn: user != null,
       }}
     >
       {children}

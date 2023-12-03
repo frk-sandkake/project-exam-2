@@ -28,6 +28,13 @@
   @apply active text-orange-50 bg-teal-600 hover:bg-teal-500;
 }
 
+.dashboard {
+  @apply rounded-lg px-3 py-2 font-semibold border text-orange-800 border-orange-800;
+}
+.dashboard-active {
+  @apply rounded-lg px-3 py-2 font-bold text-orange-900 border border-orange-800 bg-orange-100;
+}
+
 .my-input {
   @apply flex h-10 w-full rounded-md border border-slate-400 bg-slate-50 px-3 py-2 text-sm ring-offset-cyan-500 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
 }
